@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../cubit/get_cart/get_cart_cubit.dart';
+
 class SizeConfig
 {
   static double? screenHeight;

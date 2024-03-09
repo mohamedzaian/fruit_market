@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fruit_market/screen/home_screen.dart';
+import 'package:fruit_market/screen/login_screen.dart';
+import 'package:fruit_market/screen/navigation_screen.dart';
 import 'package:fruit_market/screen/onboarding_screen.dart';
 import 'package:fruit_market/utils/size_config.dart';
 
@@ -27,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           else
             {
               Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context){
-                return HomeScreen();
+                return NavigationScreen();
               }), (route) => false);
             }
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fruit_market/onbording_items/onbording_items.dart';
+import 'package:fruit_market/screen/home_screen.dart';
 import 'package:fruit_market/screen/login_screen.dart';
 import 'package:fruit_market/utils/custom_dot.dart';
 import 'package:fruit_market/utils/main_color.dart';

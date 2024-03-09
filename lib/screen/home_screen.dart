@@ -1,8 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fruit_market/screen/account_screen.dart';
-import 'package:fruit_market/screen/cart_screen.dart';
-import 'package:fruit_market/screen/favorite_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruit_market/cubit/get_product/get_data_cubit.dart';
+import 'package:fruit_market/cubit/get_stone_fruit/get_stone_fruit_cubit.dart';
+import 'package:fruit_market/screen/details_screen.dart';
+import 'package:fruit_market/utils/firestore_key.dart';
 import 'package:fruit_market/utils/main_color.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fruit_market/widgets/fetch_organic_fruit.dart';
+import 'package:like_button/like_button.dart';
+import '../models/product_model.dart';
+import '../widgets/fetch_stone_fruit.dart';
+// Mohamed Zayan
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -12,15 +22,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentIndex = 0;
+  final docId = FirebaseFirestore.instance
+      .collection(FireStoreKey().productCollection)
+      .doc()
+      .id;
+  @override
+  void initState() {
 
-  final List<Widget> listOfScreen = [
-    HomeScreen(),
-    CartScreen(),
-    FavoriteScreen(),
-    AccountScreen()
+    super.initState();
+  }
 
-  ];
+  String? selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Icons.search,
             color: Colors.white,
           ),
+          SizedBox(
+            width: 10,
+          ),
           Icon(
             Icons.notifications,
             color: Colors.white,
@@ -44,30 +59,59 @@ class _HomeScreenState extends State<HomeScreen> {
         toolbarHeight: 114,
         backgroundColor: mainColor,
       ),
-      body: listOfScreen[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        selectedItemColor: mainColor,
-        onTap: (index) {
-
-          setState(() {
-            currentIndex = index;
-          });
-          git stash
-
-
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<GetDataCubit>().getOrganicFruits();
+          context.read<GetStoneFruitCubit>().getStoneFruite();
         },
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined), label: 'Shopping Cart'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border), label: 'Favorite'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline), label: 'Account'),
-        ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 50,
+                ),
+                Text(
+                  'Organic Fruits',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                SizedBox(
+                  height: 7,
+                ),
+                Text(
+                  'Pick up from organic farms',
+                  style: TextStyle(fontSize: 12, color: Colors.black),
+                ),
+                SizedBox(
+                  height: 17,
+                ),
+                FetchOrganicFruit(),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Stone Fruits',
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+                Text(
+                  'Fresh Stone Fruits',
+                  style: TextStyle(color: Colors.black, fontSize: 12),
+                ),
+                SizedBox(
+                  height: 17,
+                ),
+                GetStoneFruit()
+
+
+
+
+
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

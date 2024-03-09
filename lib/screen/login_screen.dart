@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:fruit_market/screen/complete_info_screen.dart';
-import 'package:fruit_market/screen/home_screen.dart';
+import 'package:fruit_market/screen/navigation_screen.dart';
 import 'package:fruit_market/utils/main_color.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -42,10 +42,17 @@ class LoginScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: ()  async {
                    final UserCredential user = await signInWithGoogle();
+                  await FirebaseFirestore.instance.collection('users').add(
+                     {
+                       'uid':FirebaseAuth.instance.currentUser!.uid,
+                       'email':FirebaseAuth.instance.currentUser!.email
+
+                     }
+                   );
                    if (user != null)
                      {
                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context){
-                         return CompleteInfoScreen();
+                         return NavigationScreen();
                        }), (route) => false);
                      }
                   },

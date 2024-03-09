@@ -59,11 +59,18 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
+        debug{
+            minifyEnabled true
+        }
     }
 }
 
 flutter {
     source '../..'
+}
+android {
+    ndkVersion "25.1.8937393"
+
 }
 
 dependencies {}
